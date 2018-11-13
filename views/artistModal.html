@@ -1,0 +1,20 @@
+<div id="{{$index}}_artist_details" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4>Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Artist:<input type="text" class="form-control" ng-value="artist" ng-model="artistName"></label>
+                    <label>Genre:<input type="text" class="form-control" ng-model="artistGenre"></label>
+                    <div>
+                        <button class="btn btn-success" ng-click="scan.updateArtist(artist,artistGenre,artistName);ctrlGenre = scan.getCtrlGenre(albums);artist = scan.artistSwap(artist,artistName)" data-dismiss="modal">Update</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html ng-app='holdingBay'>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="./node_modules/angular-toastr/dist/angular-toastr.css">
+        <script src="./node_modules/jquery/dist/jquery.js"></script>
+        <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="./node_modules/angular/angular.js"></script>
+        <script src="./node_modules/angular-cookies/angular-cookies.js"></script>
+        <script src='./node_modules/angular-route/angular-route.js'></script>
+        <script src="./node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
+        <script src='./js/services/holdingBay.js'></script>
+        <script src='./js/controllers/movie.js'></script>
+        <script src='./js/controllers/music.js'></script>
+        <script src='./js/controllers/tv.js'></script>
+    </head>
+    <body>
+        <script>
+            var app = angular.module('holdingBay',['ngRoute','HoldingBayService','Movies','Music','Tv'])
+                    .config(['$routeProvider',function($routeProvider){
+                            $routeProvider
+                            .when('/',{templateUrl:'views/home.html'})
+                            .when('/movies',{templateUrl:'views/movies.html'})
+                            .when('/music',{templateUrl:'views/music.html'})
+                            .when('/tv',{templateUrl:'views/tv.html'})
+                            .otherwise({redirectTo:'/'});
+                    }])
+                    .controller('HomeController',function(HoldingBayService){
+                            var self = this;
+                            self.getCounts = function(){
+                                HoldingBayService.getCounts().then(function(data){
+                                    console.log(data);
+                                });
+                            };
+                            self.getCounts();
+                        });
+        </script>
+        <div ng-include="'views/navbar.html'"></div>
+        <div class="jumbotron text-center">
+            <h1>LOE</h1>
+        </div>
+        <div ng-view></div>
+    </body>
+</html>

@@ -1,0 +1,26 @@
+<div id="{{$parent.$index}}_artist_{{$index}}_album_details" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Artist:<input type="text" class="form-control" ng-value="artist" ng-model="artistName"></label>
+                    <label>Genre:<input type="text" class="form-control"  ng-value="ctrlGenre" ng-model="albumGenre"></label>
+                    <label>Year:<input type="text" class="form-control" ng-value="songs[0].year" ng-model="albumYear"></label>
+                    <label>Album:<input type="text" class="form-control" ng-value="album" ng-model="albumName"></label>
+                    <div>
+                                <button class="btn btn-success" ng-click="
+                                        scan.updateAlbum(artist,album,artistName,albumName,albumGenre,albumYear);
+                                        $parent.album = scan.albumSwap(album,albumName);
+                                        $parent.$parent.ctrlGenre = scan.getCtrlGenre(albums);
+                                        $parent.$parent.artist = scan.artistSwap(artist,artistName);"
+                                        data-dismiss="modal">Update</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>

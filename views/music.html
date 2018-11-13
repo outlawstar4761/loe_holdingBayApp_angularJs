@@ -1,0 +1,58 @@
+<style>
+.artistMisMatch{
+  background-color:#ff6a00;
+}
+</style>
+<div class="container" ng-controller='MusicController as scan'>
+    <div class="row" ng-show='scan.loading'>
+        <div class="col-sm-12"><h4>Loading...</h4></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" ng-repeat="(artist,albums) in scan.scanResults track by $index" ng-init="ctrlGenre = scan.getCtrlGenre(albums)">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#{{$index}}">{{artist}}</a>
+                        <span style="margin-left: 2%">{{ctrlGenre}}</span>
+                        <div style="float:right;margin-right:2%" class="btn-group">
+                            <button class="btn btn-xs btn-success">+</button>
+                            <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{$index}}_artist_details">~</button>
+                            <button class="btn btn-xs btn-danger">-</button>
+                        </div>
+                    </h1>
+                </div>
+                <div id="{{$index}}" class="panel-body collapse">
+                    <div class="panel panel-default" ng-repeat="(album,songs) in albums track by $index" ng-init="showSongs = false;">
+                        <div class="panel-heading">
+                            <h3><label><input type="checkbox" ng-model="showSongs" ng-value="true" style="display:none">{{album}} ({{songs[0].year}})</label>
+                                <div style="float:right;margin-right:2%" class="btn-group">
+                                    <button class="btn btn-xs btn-warning" ng-click="scan.parseTrackNumber(songs)">#</button>
+                                    <button class="btn btn-xs btn-warning" ng-click="scan.parseFeat(songs)">P</button>
+                                    <button class="btn btn-xs btn-success" ng-click='scan.approveAlbum(songs)'>+</button>
+                                    <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{$parent.$index}}_artist_{{$index}}_album_details">~</button>
+                                    <button class="btn btn-xs btn-danger">-</button>
+                                </div>
+                            </h3>
+                        </div>
+                        <div class="panel-body" ng-show="showSongs">
+                             <div class="list-group" ng-repeat="s in songs">
+                                 <div class="list-group-item">
+                                     <span>{{s.track_number}}</span>
+                                     <span style="margin-left: 2%" ng-class="(s.artist == artist) ? '' : 'artistMisMatch'"><a>{{s.title}}</a></span>
+                                     <div style="float:right;margin-right:2%" class="btn-group">
+                                         <button class="btn btn-xs btn-success" ng-click="scan.approveSong(s);scan.removeSong(s.UID)">+</button>
+                                         <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{s.UID}}_details">~</button>
+                                         <button class="btn btn-xs btn-danger">-</button>
+                                     </div>
+                                 </div>
+                                 <div ng-include="'views/songModal.html'"></div>
+                             </div>
+                        </div>
+                        <div ng-include="'views/albumModal.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <div ng-include="'views/artistModal.html'"></div>
+        </div>
+    </div>
+</div>

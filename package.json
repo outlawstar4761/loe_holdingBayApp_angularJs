@@ -1,0 +1,29 @@
+{
+  "name": "loe_holdingbayapp_angularjs",
+  "version": "1.0.0",
+  "description": "For LOE administrators to approve new files",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server -a 0.0.0.0 -p 8081"
+  },
+  "dependencies": {
+    "http-server": "",
+    "jquery": "",
+    "angular": "~1.6.8",
+    "angular-route": "~1.6.8",
+    "angular-cookies": "~1.6.8",
+    "angular-toastr": "",
+    "bootstrap": "~3.3.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/outlawstar4761/loe_holdingBayApp_angularJs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/outlawstar4761/loe_holdingBayApp_angularJs/issues"
+  },
+  "homepage": "https://github.com/outlawstar4761/loe_holdingBayApp_angularJs#readme"
+}

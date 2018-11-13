@@ -1,0 +1,124 @@
+<div class="container" ng-controller='TvController as scan'>
+    <div class="row" ng-show='scan.loading'>
+        <div class="col-sm-12"><h4>Loading...</h4></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" ng-repeat="(show,seasons) in scan.scanResults track by $index" ng-init="ctrlGenre = scan.getCtrlGenre(seasons)">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#{{$index}}">{{show}}</a>
+                        <span style="margin-left: 2%">{{ctrlGenre}}</span>
+                        <div style="float:right;margin-right:2%" class="btn-group">
+                            <button class="btn btn-xs btn-success">+</button>
+                            <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{$index}}_show_details">~</button>
+                            <button class="btn btn-xs btn-danger">-</button>
+                        </div>
+                    </h1>
+                </div>
+                <div id="{{$index}}" class="panel-body collapse">
+                    <div class="panel panel-default" ng-repeat="(season,episodes) in seasons track by $index" ng-init="showEpisodes = false;">
+                        <div class="panel-heading">
+                            <h3><label><input type="checkbox" ng-model="showEpisodes" ng-value="true" style="display:none">{{season}}</label>
+                                <div style="float:right;margin-right:2%" class="btn-group">
+                                    <button class="btn btn-xs btn-warning" ng-click="">#</button>
+                                    <button class="btn btn-xs btn-warning" ng-click="">P</button>
+                                    <button class="btn btn-xs btn-success" ng-click='scan.approveSeason(episodes)'>+</button>
+                                    <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{$parent.$index}}_show_{{$index}}_season_details">~</button>
+                                    <button class="btn btn-xs btn-danger">-</button>
+                                </div>
+                            </h3>
+                        </div>
+                        <div class="panel-body" ng-show="showEpisodes">
+                             <div class="list-group" ng-repeat="e in episodes">
+                                 <div class="list-group-item">
+                                     <span style="margin-left: 2%"><a>{{e.ep_number}} | {{e.ep_title}}</a></span>
+                                     <div style="float:right;margin-right:2%" class="btn-group">
+                                         <button class="btn btn-xs btn-success" ng-click="scan.approveEpisode(e)">+</button>
+                                         <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{e.UID}}_details">~</button>
+                                         <button class="btn btn-xs btn-danger">-</button>
+                                     </div>
+                                 </div>
+                                 <div id="{{e.UID}}_details" class="modal fade" role="dialog">
+                                     <div class="modal-dialog">
+                                         <div class="modal-content">
+                                             <div class="modal-header">
+                                                 <button class="close" data-dismiss="modal">&times;</button>
+                                                 <h4 class="modal-title">Details</h4>
+                                             </div>
+                                             <div class="modal-body">
+                                                 <div class="form-group">
+                                                     <label>Show Title:<input type="text" class="form-control" ng-model="e.show_title"></label>
+                                                     <label>Genre:<input type="text" class="form-control" ng-model="e.genre"></label>
+                                                     <label>Ep Number:<input type="text" class="form-control" ng-model="e.ep_number"></label>
+                                                     <label>Ep Title:<input type="text" class="form-control" ng-model="e.ep_title"></label>
+                                                     <label>Ep Length:<input type="number" class="form-control" ng-model="e.runtime"></label>
+                                                     <label>Season:<input type="number" class="form-control" ng-model="e.season_number"></label>
+                                                     <label>Year:<input type="number" class="form-control" ng-model="e.season_year"></label>
+                                                 </div>
+                                             </div>
+                                             <div class="modal-footer"></div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+                        <div id="{{$parent.$index}}_show_{{$index}}_season_details" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label>Genre:<input type="text" class="form-control" ng-model="seasonUpdate.genre"></label>
+                                                <label>Season #:<input type="number" class="form-control" ng-model="seasonUpdate.seasonNumber"></label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label>Year:<input type="number" class="form-control" ng-model="seasonUpdate.year"></label>
+                                                <label>Episode Length:<input type="number" class="form-control" ng-model="seasonUpdate.runtime"></label>
+                                            </div>
+                                            <div class="col-sm-12" ng-show="showEpisodelist">
+                                                <textarea class="form-control" ng-model="episodeList"></textarea>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button class="btn btn-success" ng-click="
+                                                        scan.updateSeason(episodes,seasonUpdate,episodeList);
+                                                        $parent.ctrlGenre = scan.getCtrlGenre(seasons);
+                                                        album = scan.albumSwap(album,albumName);
+                                                        $parent.artist = scan.artistSwap(artist,artistName);" data-dismiss="modal">Update</button>
+                                                <label class="btn btn-info"><input type="checkbox" style="display:none" ng-model="showEpisodelist">Episode List</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="{{$index}}_show_details" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button class="close" data-dismiss="modal">&times;</button>
+                            <h4>Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Show:<input type="text" class="form-control" ng-value="show" ng-model="showName"></label>
+                                <label>Genre:<input type="text" class="form-control" ng-model="showGenre"></label>
+                                <div>
+                                    <button class="btn btn-success" ng-click="scan.updateShow(show,showGenre,showName);ctrlGenre = scan.getCtrlGenre(seasons);show = scan.showSwap(show,showName)" data-dismiss="modal">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

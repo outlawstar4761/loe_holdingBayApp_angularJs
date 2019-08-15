@@ -16,13 +16,15 @@
         <script src='./js/controllers/movie.js'></script>
         <script src='./js/controllers/music.js'></script>
         <script src='./js/controllers/tv.js'></script>
+        <script src='./js/controllers/login.js'></script>
     </head>
     <body>
         <script>
-            var app = angular.module('holdingBay',['ngRoute','HoldingBayService','Movies','Music','Tv'])
+            var app = angular.module('holdingBay',['ngRoute','HoldingBayService','Movies','Music','Tv','Login'])
                     .config(['$routeProvider',function($routeProvider){
                             $routeProvider
-                            .when('/',{templateUrl:'views/home.html'})
+                            .when('/',{templateUrl:'views/login.html'})
+                            .when('/home',{templateUrl:'views/home.html'})
                             .when('/movies',{templateUrl:'views/movies.html'})
                             .when('/music',{templateUrl:'views/music.html'})
                             .when('/tv',{templateUrl:'views/tv.html'})
@@ -30,12 +32,12 @@
                     }])
                     .controller('HomeController',function(HoldingBayService){
                             var self = this;
-                            self.getCounts = function(){
-                                HoldingBayService.getCounts().then(function(data){
-                                    console.log(data);
-                                });
-                            };
-                            self.getCounts();
+                            // self.getCounts = function(){
+                            //     HoldingBayService.getCounts().then(function(data){
+                            //         console.log(data);
+                            //     });
+                            // };
+                            // self.getCounts();
                         });
         </script>
         <div ng-include="'views/navbar.html'"></div>

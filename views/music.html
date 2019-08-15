@@ -22,14 +22,14 @@
                     </h1>
                 </div>
                 <div id="{{$index}}" class="panel-body collapse">
-                    <div class="panel panel-default" ng-repeat="(album,songs) in albums track by $index" ng-init="showSongs = false;">
+                    <div class="panel panel-default" ng-repeat="(album,songs) in albums track by $index" ng-init="showSongs = false;tracker = $parent.$index">
                         <div class="panel-heading">
                             <h3><label><input type="checkbox" ng-model="showSongs" ng-value="true" style="display:none">{{album}} ({{songs[0].year}})</label>
                                 <div style="float:right;margin-right:2%" class="btn-group">
                                     <button class="btn btn-xs btn-warning" ng-click="scan.parseTrackNumber(songs)">#</button>
                                     <button class="btn btn-xs btn-warning" ng-click="scan.parseFeat(songs)">P</button>
                                     <button class="btn btn-xs btn-success" ng-click='scan.approveAlbum(songs)'>+</button>
-                                    <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{$parent.$index}}_artist_{{$index}}_album_details">~</button>
+                                    <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{tracker}}_artist_{{$index}}_album_details">~</button>
                                     <button class="btn btn-xs btn-danger">-</button>
                                 </div>
                             </h3>

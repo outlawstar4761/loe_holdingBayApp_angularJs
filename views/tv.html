@@ -34,7 +34,7 @@
                                  <div class="list-group-item">
                                      <span style="margin-left: 2%"><a>{{e.ep_number}} | {{e.ep_title}}</a></span>
                                      <div style="float:right;margin-right:2%" class="btn-group">
-                                         <button class="btn btn-xs btn-success" ng-click="scan.approveEpisode(e)">+</button>
+                                         <button class="btn btn-xs btn-success" ng-click="scan.approveEpisode(e); scan.removeEpisode(e.UID)">+</button>
                                          <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{e.UID}}_details">~</button>
                                          <button class="btn btn-xs btn-danger">-</button>
                                      </div>

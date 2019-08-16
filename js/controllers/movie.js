@@ -12,13 +12,14 @@ var app = angular.module('Movies',['HoldingBayService','toastr'])
             self.approve = function(index){
                 var movie = self.scanResults[index];
                 HoldingBayService.approveMovie(movie).then(function(data){
-                    toastr.success(self.scanResults[index].title + ' Approved!');
-                    self.scanResults.splice(index,1);                    
+                    if(!data.error){
+                      toastr.success(self.scanResults[index].title + ' Approved!');
+                      self.scanResults.splice(index,1);
+                    }else{
+                      toastr.error(data.error);
+                    }                    
                     console.log(data);
                 });
             };
-            self.testToast = function(){
-                toastr.success('Youve made Toast!');
-            };            
             self.getMovies();
         });

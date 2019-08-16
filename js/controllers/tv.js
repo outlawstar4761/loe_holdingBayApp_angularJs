@@ -56,17 +56,32 @@ var app = angular.module('Tv',['HoldingBayService','toastr'])
                 console.log(episode);
                 HoldingBayService.approveEpisode(episode).then(function(data){
                     console.log(data);
-                    toastr.success(data.ep_title + ' Approved!','Hey Now!');
+                    if(!data.error){
+                        toastr.success(data.ep_title + ' Approved!');
+                    }else{
+                        toastr.error(data.error);
+                    }
                 });
             };
-            self.approveSeason = function(episodes){
-                //console.log(episodes);
-                var chain = $q.when();
-                for(var i = 0; i < episodes.length; i++){
-                    chain = chain.then(function(){
-                        return HoldingBayService.approveEpisode(episodes[i]);
-                    });
+            self.removeEpisode = function(UID){
+                for(shows in self.scanResults){
+                    for(seasons in self.scanResults[shows]){
+                        for(episodes in self.scanResults[shows][seasons]){
+                            if(self.scanResults[shows][seasons][episodes].UID === UID){
+                                self.scanResults[shows][seasons].splice(episodes,1);
+                            }
+                        }
+                    }
                 }
+            }
+            self.approveSeason = function(episodes){
+                var promises = [];
+                for(var i = 0; episodes.length; i++){
+                  promises.push(HoldingBayService.approveEpisode(episodes[i]));
+                }
+                $q.all(promises).then(function(results){
+                  console.log(results);
+                });
             };
             self.updateShow = function(){};
             self.getShows();

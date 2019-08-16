@@ -131,6 +131,7 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
             self.approveAlbum = function(songs){
                 for(var i = 0; i < songs.length; i++){
                     self.approveSong(songs[i]);
+                    self.removeSong(songs[i].UID);
                 }
             };
             self.approveArtist = function(artist){

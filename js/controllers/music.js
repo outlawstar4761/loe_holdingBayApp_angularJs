@@ -1,12 +1,22 @@
 var app = angular.module('Music',['HoldingBayService','toastr'])
         .controller('MusicController',function(HoldingBayService,toastr){
             var self = this;
+            self.fsPattern = /\/LOE\//;
+            self.domainPattern = /http:\/\/loe.outlawdesigns.io\//;
+            self.domain = 'http://loe.outlawdesigns.io/';
+            self.fsReplacement = '/LOE/';
+            self.selectedCover = null;
             self.loading = true;
+            self.scanResults = {};
+            self.possibleCovers = [];
             self.getArtists = function(){
                 console.log('getting results...');
                 HoldingBayService.getSongs().then(function(data){
+                    //console.log(data);
                     self.loading = false;
-                    console.log(data);
+                    self.possibleCovers = self.parseCovers(data.images);
+                    console.log(self.possibleCovers);
+                    delete data.images;
                     self.scanResults = data;
                 });
             };
@@ -116,6 +126,18 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
                     }
                     //self.removeSong(song);
                 });
+            };
+            self.parseCovers = function(imageArray){
+              for(var i = 0; i < imageArray.length; i++){
+                imageArray[i] = imageArray[i].replace(self.fsPattern,self.domain);
+              }
+              return imageArray;
+            };
+            self.setCover = function(songs){
+              for(var i = 0; i < songs.length; i++){
+                songs[i].cover_path = self.selectedCover.replace(self.domainPattern,self.fsReplacement);
+              }
+              console.log(self.scanResults);
             };
             self.removeSong = function(UID){
               for (artists in self.scanResults){

@@ -1,4 +1,6 @@
-const BASEURL = 'http://api.outlawdesigns.io:9669/';
+const BASEURL = 'http://api.outlawdesigns.io:4669/';
+// const BASEURL = 'http://api.outlawdesigns.io:9669/';
+const AUTHURL = 'http://api.outlawdesigns.io:9661/';
 var app = angular.module('HoldingBayService',[])
         .factory('HoldingBayService',function($http){
             return {
@@ -12,11 +14,11 @@ var app = angular.module('HoldingBayService',[])
                     return {headers:{'auth_token': this.token}};
                 },
                 verifyToken:function(){
-                    var url = BASEURL + 'verify';
+                    var url = AUTHURL + 'verify';
                     return $http.get(url,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
                 },
                 authenticate:function(username,password){
-                    var url = BASEURL + 'authenticate';
+                    var url = AUTHURL + 'authenticate';
                     var config = {headers:{"request_token": username,"password":password}};
                     return $http.get(url,config).then(this.handleResponse,this.handleError);
                 },
@@ -37,11 +39,11 @@ var app = angular.module('HoldingBayService',[])
                     return $http.post(url,movieObj,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
                 },
                 approveSong:function(song){
-                    var url = BASEURL + 'music';
+                    var url = BASEURL + 'song';
                     return $http.post(url,song,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
                 },
                 approveEpisode:function(episode){
-                    var url = BASEURL + 'tv';
+                    var url = BASEURL + 'episode';
                     return $http.post(url,episode,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
                 },
                 getCounts:function(){

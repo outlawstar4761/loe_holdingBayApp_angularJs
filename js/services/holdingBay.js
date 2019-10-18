@@ -1,5 +1,4 @@
-const BASEURL = 'http://api.outlawdesigns.io:4669/';
-// const BASEURL = 'http://api.outlawdesigns.io:9669/';
+const BASEURL = 'http://api.outlawdesigns.io:9669/';
 const AUTHURL = 'http://api.outlawdesigns.io:9661/';
 var app = angular.module('HoldingBayService',[])
         .factory('HoldingBayService',function($http){

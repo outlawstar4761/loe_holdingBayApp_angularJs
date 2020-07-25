@@ -33,6 +33,10 @@ var app = angular.module('HoldingBayService',[])
                     var url = BASEURL + 'holdingbay/tv';
                     return $http.get(url,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
                 },
+                getComics:function(){
+                    var url = BASEURL + 'holdingbay/comic';
+                    return $http.get(url,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
+                },
                 approveMovie:function(movieObj){
                     var url = BASEURL + 'movie';
                     return $http.post(url,movieObj,this.buildAuthHeader()).then(this.handleResponse,this.handleError);

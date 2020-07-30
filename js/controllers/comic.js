@@ -9,15 +9,28 @@ var app = angular.module('Comic',['HoldingBayService','toastr'])
                     console.log(self.scanResults);
                 });
             };
-            self.approveComic = function(comic){
-                console.log(comic);
+            self.parseIssueNumber = function(number){
+              var numZeros = 3 - number.toString().length;
+              var numZeros = 3 - number.length;
+              var str = '';
+              for(var i = 0; i < numZeros; i++){
+                  str += '0';
+              }
+              console.log(str);
+              return str;
+
+            };
+            self.approve = function(index){
+                var comic = self.scanResults[index];
                 HoldingBayService.approveComic(comic).then(function(data){
                     console.log(data);
                     if(!data.error){
                         toastr.success(data.issue_title + ' Approved!');
+                        self.scanResults.splice(index,1);
                     }else{
                         toastr.error(data.error);
                     }
                 });
             };
+            self.getComics();
         });

@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#{{$index}}">{{result.title}}</a>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#{{$index}}">{{result.series_title}} {{result.issue_number}}</a>
                         <span style="float:right"><button data-toggle="modal" data-target="#{{$index}}_confirmDelete" class="btn btn-xs btn-danger">x</button></span>
                         <span style="float:right"><button class="btn btn-xs btn-success" ng-click="scan.approve($index)">+</button></span>
                         <span style="float:right"><a href="{{result.file_path}}" class="btn btn-xs btn-info" onclick="window.open(this.href,'PreviewWindow','width=400,height=400');return false;">></a></span>
@@ -16,25 +16,33 @@
                 <div id="{{$index}}" class="panel-body collapse">
                     <div class="list-group">
                         <div class="form-group">
-                            <div class="list-group-item"><label><a>Title:</a></label><input type="text" ng-model="result.title" class="form-control"></div>
+                            <div class="list-group-item"><label><a>Series Title:</a></label><input type="text" ng-model="result.series_title" class="form-control"></div>
+                            <div class="list-group-item"><label><a>Issue Title:</a></label><input type="text" ng-model="result.issue_title" class="form-control"></div>
                             <div class="list-group-item">
-                                <label><a>Year:</a><input type="text" ng-model="result.relyear" class="form-control"></label>
-                                <label><a>Rating:</a><input type="text" ng-model="result.rating" class="form-control"></label>
-                                <label><a>Length:</a><input type="text" ng-model="result.run_time" class="form-control"></label>
-                                <div style="float:right">
+                                <label><a>Issue Number:</a><input type="text" ng-model="result.issue_number" class="form-control"></label>
+                                <label><a>Cover Date:</a><input type="text" ng-model="result.issue_cover_date" class="form-control"></label>
+                                <label><a>Series Start Year:</a><input type="text" ng-model="result.series_start_year" class="form-control"></label>
+                                <label><a>Series End Year:</a><input type="text" ng-model="result.series_end_year" class="form-control"></label>
+                                <!-- <div style="float:right">
                                     <a data-toggle="modal" data-target="#{{$index}}_manualCover"><img src="{{result.cover_path}}" alt="Upload an Image" height="80" width="60"></a>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="list-group-item">
-                                <label><a>Genre 1:</a><input type="text" ng-model="result.genre" class="form-control"></label>
-                                <label><a>Genre 2:</a><input type="text" ng-model="result.genre2" class="form-control"></label>
-                                <label><a>Genre 3:</a><input type="text" ng-model="result.genre3" class="form-control"></label>
+                                <label><a>Publisher:</a><input type="text" ng-model="result.publisher" class="form-control"></label>
                             </div>
-                            <div class="list-group-item"><a>Director:</a><input type="text" ng-model="result.director" class="form-control"></div>
+                            <div class="list-group-item"><a>Story Arc:</a><input type="text" ng-model="result.story_arc" class="form-control"></div>
                             <div class="list-group-item">
-                                <strong ng-click='editDescription=1'>Description:</strong>
-                                <p ng-click='editDescription=1'>{{result.description}}</p>
-                                <textarea class='form-control' rows='6' ng-model="result.description" ng-show='editDescription' ng-blur='editDescription = 0'></textarea>
+                                <strong ng-click='editDescription=1'>Issue Description:</strong>
+                                <p ng-click='editDescription=1'>{{result.issue_description}}</p>
+                                <textarea class='form-control' rows='6' ng-model="result.issue_description" ng-show='editDescription' ng-blur='editDescription = 0'></textarea>
+                            </div>
+                            <div class="list-group-item">
+                                <strong ng-click='editSDescription=1'>Series Description:</strong>
+                                <p ng-click='editSDescription=1'>{{result.series_description}}</p>
+                                <textarea class='form-control' rows='6' ng-model="result.series_description" ng-show='editSDescription' ng-blur='editSDescription = 0'></textarea>
+                            </div>
+                            <div class="list-group-item">
+                              <p>{{result.file_path}}</P>
                             </div>
                             <div id="{{$index}}_manualCover" class="modal fade" role="dialog">
                                 <div class="modal-dialog">
@@ -66,7 +74,7 @@
                                 <h4 class="modal-title">Confirm Delete</h4>
                             </div>
                             <div class="modal-body">
-                                <h3>Are you sure you want to delete {{result.title}}?</h3>
+                                <h3>Are you sure you want to delete {{result.issue_title}}?</h3>
                                 <div class="button-group" style="margin:auto">
                                     <button class="btn btn-success">Confirm</button>
                                     <button class="btn btn-danger" data-dismiss="modal">Cancel</button>

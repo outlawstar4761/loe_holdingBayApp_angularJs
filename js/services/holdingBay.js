@@ -49,6 +49,10 @@ var app = angular.module('HoldingBayService',[])
                     var url = BASEURL + 'episode';
                     return $http.post(url,episode,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
                 },
+                approveComic:function(comic){
+                    var url = BASEURL + 'comic';
+                    return $http.post(url,comic,this.buildAuthHeader()).then(this.handleResponse,this.handleError);
+                },
                 getCounts:function(){
                     var url = BASEURL + 'get/counts';
                     return $http.get(url).then(function(response){

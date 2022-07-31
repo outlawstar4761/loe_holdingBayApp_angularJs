@@ -9,8 +9,11 @@
                 <div class="form-group">
                     <label>Artist:<input type="text" class="form-control" ng-value="artist" ng-model="artistName"></label>
                     <label>Genre:<input type="text" class="form-control" ng-model="artistGenre"></label>
+                    <label>Home Country:<input type="text" class="form-control" ng-model="artistCountry"></label>
+                    <label>Home City:<input type="text" class="form-control" ng-model="artistCity"></label>
+                    <label>Home State:<input type="text" class="form-control" ng-model="artistState"></label>
                     <div>
-                        <button class="btn btn-success" ng-click="scan.updateArtist(artist,artistGenre,artistName);ctrlGenre = scan.getCtrlGenre(albums);artist = scan.artistSwap(artist,artistName)" data-dismiss="modal">Update</button>
+                        <button class="btn btn-success" ng-click="scan.updateArtist(artist,artistGenre,artistName,artistCountry,artistCity,artistState);ctrlGenre = scan.getCtrlGenre(albums);" data-dismiss="modal">Update</button>
                     </div>
                 </div>
             </div>

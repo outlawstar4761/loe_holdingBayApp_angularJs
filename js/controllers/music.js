@@ -2,8 +2,8 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
         .controller('MusicController',function(HoldingBayService,toastr){
             var self = this;
             self.fsPattern = /\/LOE\//;
-            self.domainPattern = /http:\/\/loe.outlawdesigns.io\//;
-            self.domain = 'http://loe.outlawdesigns.io/';
+            self.domainPattern = /https:\/\/loe.outlawdesigns.io\//;
+            self.domain = 'https://loe.outlawdesigns.io/';
             self.fsReplacement = '/LOE/';
             self.selectedCover = null;
             self.loading = true;
@@ -20,6 +20,14 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
                     self.scanResults = data;
                 });
             };
+            self.artistSwap = function(artist,artistName){
+                Object.defineProperty(self.scanResults,artistName,Object.getOwnPropertyDescriptor(self.scanResults,artist));
+                delete self.scanResults[artist];
+            };
+            self.albumSwap = function(artist,album,albumName){
+                Object.defineProperty(self.scanResults[artist],albumName,Object.getOwnPropertyDescriptor(self.scanResults[artist],album));
+                delete self.scanResults[artist][album];
+            };
             self.getCtrlGenre = function(albums){
                 var albumKeys = Object.keys(albums);
                 console.log(albumKeys);
@@ -28,45 +36,36 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
                 }
                 return albums[albumKeys[0]][0].genre;
             };
-            self.updateArtist = function(artist,genre,artistName){
-                //alert(artist + "\n" + genre + "\n" + artistName);
-                var artistKeys = Object.keys(self.scanResults);
-                for(var i = 0; i < artistKeys.length;i++){
-                    var albumKeys = Object.keys(self.scanResults[artistKeys[i]]);
-                    for(var j = 0; j < albumKeys.length;j++){
-//                        console.log(self.scanResults[artistKeys[i]][albumKeys[j]]);
-                        for(var k = 0; k < self.scanResults[artistKeys[i]][albumKeys[j]].length;k++){
-                            if(self.scanResults[artistKeys[i]][albumKeys[j]][k].artist == artist){
-                                self.scanResults[artistKeys[i]][albumKeys[j]][k].genre = genre;
-                                self.scanResults[artistKeys[i]][albumKeys[j]][k].band = artist;
-                                if(artistName != artist && artistName !== undefined){
-                                    self.scanResults[artistKeys[i]][albumKeys[j]][k].artist = artistName;
-                                    self.scanResults[artistKeys[i]][albumKeys[j]][k].band = artistName;
-                                }
-                                //console.log(self.scanResults[artistKeys[i]][albumKeys[j]][k].title + "\n" + self.scanResults[artistKeys[i]][albumKeys[j]][k].artist + "\n" + self.scanResults[artistKeys[i]][albumKeys[j]][k].album + "\n" + self.scanResults[artistKeys[i]][albumKeys[j]][k].genre);
-                            }else{
-                                continue;
-                            }
-                        }
-                    }
+            self.updateArtist = function(artist,genre,artistName,artistCountry,artistCity,artistState){
+              var albums = self.scanResults[artist];
+              var keys = Object.keys(albums);
+              keys.forEach((k)=>{
+                songs = self.scanResults[artist][k];
+                for(var i = 0; i < songs.length; i++){
+                  self.scanResults[artist][k][i].genre = (genre !== undefined) ? genre:self.scanResults[artist][k][i].genre;
+                  self.scanResults[artist][k][i].artist_country = (artistCountry !== undefined) ? artistCountry:self.scanResults[artist][k][i].artist_country;
+                  self.scanResults[artist][k][i].artist_city = (artistCity !== undefined) ? artistCity:self.scanResults[artist][k][i].artist_city;
+                  self.scanResults[artist][k][i].artist_state = (artistState !== undefined) ? artistState:self.scanResults[artist][k][i].artist_state;
+                  if(artistName !== undefined){
+                    self.scanResults[artist][k][i].artist = artistName;
+                    self.scanResults[artist][k][i].band = artistName;
+                  }
                 }
+              });
+              if(artistName !== undefined){
+                self.artistSwap(artist,artistName);
+              }
             };
-            self.artistSwap = function(artist,artistName){
-                //console.log(artist);
-                //console.log(artistName);
-                if(artistName === undefined){
-                    return artist;
-                }
-                return artistName;
-            };
-            self.updateAlbum = function(artist,album,artistName,albumName,albumGenre,albumYear){
+            self.updateAlbum = function(artist,album,artistName,albumName,albumGenre,albumYear,publisher){
+                var renameAlbum = (albumName !== undefined) ? true:false;
+                var renameArtist = (artistName !== undefined) ? true:false;
                 var songs = self.scanResults[artist][album];
                 for(var i = 0; i < songs.length; i++){
-                  if(artistName !== undefined){
+                  if(renameArtist){
                     songs[i].artist = artistName;
                     songs[i].band = artistName;
                   }
-                  if(albumName !== undefined){
+                  if(renameAlbum){
                     songs[i].album = albumName;
                   }
                   if(albumGenre !== undefined){
@@ -75,13 +74,18 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
                   if(albumYear !== undefined){
                     songs[i].year = albumYear;
                   }
+                  if(publisher !== undefined){
+                    songs[i].publisher = publisher;
+                  }
                 }
-            };
-            self.albumSwap = function(album,albumName){
-                if(albumName === undefined){
-                    return album;
+                if(renameArtist){
+                  self.artistSwap(artist,artistName);
                 }
-                return albumName;
+                if(renameAlbum && renameArtist){
+                  self.albumSwap(artistName,album,albumName);
+                }else if(renameAlbum){
+                  self.albumSwap(artist,album,albumName);
+                }
             };
             self.parseFeat = function(songs){
                 var parPattern = /\((.*?)\)/g;
@@ -127,6 +131,19 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
                     //self.removeSong(song);
                 });
             };
+            self.approveSongPromise = function(song){
+              return new Promise((resolve,reject)=>{
+                HoldingBayService.approveSong(song).then((data)=>{
+                  if(!("error" in data)){
+                    toastr.success(data.title + " Approved!");
+                    resolve(song.UID);
+                  }else{
+                    toastr.error(data);
+                    reject(data);
+                  }
+                });
+              });
+            };
             self.parseCovers = function(imageArray){
               for(var i = 0; i < imageArray.length; i++){
                 imageArray[i] = imageArray[i].replace(self.fsPattern,self.domain);
@@ -151,15 +168,29 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
               }
             };
             self.approveAlbum = function(songs){
-                for(var i = 0; i < songs.length; i++){
-                    self.approveSong(songs[i]);
-                    self.removeSong(songs[i].UID);
-                }
-            };
-            self.approveArtist = function(artist){
-                HoldingBayService.postNewArtist(artist).then(function(data){
-                    console.log(data);
+                var promises = [];
+                songs.forEach((s)=>{
+                  promises.push(self.approveSongPromise(s));
                 });
+                Promise.allSettled(promises).then((data)=>{
+                  data.forEach((d)=>{
+                    console.log(d);
+                    if(d.status == "fulfilled"){
+                      self.removeSong(d.value);
+                    }
+                  })
+                });
+            };
+            self.approveArtist = function(albums){
+              for(albumKey in albums){
+                self.approveAlbum(albums[albumKey]);
+              }
             };
             self.getArtists();
         });
+
+/*
+todo:
+  Promise All for artist/album approval
+  add publisher to album modal.
+*/

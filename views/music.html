@@ -17,6 +17,8 @@
                         <div style="float:right;margin-right:2%" class="btn-group">
                             <button class="btn btn-xs btn-success" ng-click="scan.approveArtist(albums)">+</button>
                             <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{$index}}_artist_details">~</button>
+                            <a href="https://www.metal-archives.com/search?searchString={{artist}}&type=band_name" class="btn btn-xs btn-info" target="blank">MA</a>
+                            <a href="https://en.wikipedia.org/w/index.php?go=Go&search={{artist}}" class="btn btn-xs btn-info" target="blank">WIKI</a>
                             <button class="btn btn-xs btn-danger">-</button>
                         </div>
                     </h1>
@@ -31,6 +33,8 @@
                                     <button class="btn btn-xs btn-warning" ng-click="scan.parseFeat(songs)">P</button>
                                     <button class="btn btn-xs btn-success" ng-click='scan.approveAlbum(songs)'>+</button>
                                     <button class="btn btn-xs btn-info" data-toggle="modal" data-target="#{{tracker}}_artist_{{$index}}_album_details">~</button>
+                                    <a href="https://www.metal-archives.com/search?searchString={{album}}&type=album_title" class="btn btn-xs btn-info" target="blank">MA</a>
+                                    <a href="https://en.wikipedia.org/w/index.php?go=Go&search={{album}}" class="btn btn-xs btn-info" target="blank">WIKI</a>
                                     <button class="btn btn-xs btn-danger">-</button>
                                 </div>
                             </h3>

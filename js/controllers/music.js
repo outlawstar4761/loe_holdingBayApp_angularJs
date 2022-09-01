@@ -156,18 +156,30 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
               }
               console.log(self.scanResults);
             };
+            self.spliceCover = function(cover_path){
+              let targetValue = cover_path.replace(self.fsPattern,self.domain);
+              let targetIndex = self.possibleCovers.indexOf(targetValue);
+              if(targetIndex !== -1){
+                self.possibleCovers.splice(targetIndex,1);
+              }
+            }
             self.removeSong = function(UID){
               for (artists in self.scanResults){
                 for(albums in self.scanResults[artists]){
                   for(songs in self.scanResults[artists][albums]){
                     if(self.scanResults[artists][albums][songs].UID === UID){
                       self.scanResults[artists][albums].splice(songs,1);
+                      self.spliceCover(self.scanResults[artists][albums][songs].cover_path);
                     }
                   }
                 }
               }
             };
             self.approveAlbum = function(songs){
+                let confirmation = confirm("Are you sure you want to approve these" + songs.length + " songs?");
+                if(!confirmation){
+                  return;
+                }
                 var promises = [];
                 songs.forEach((s)=>{
                   promises.push(self.approveSongPromise(s));
@@ -182,15 +194,15 @@ var app = angular.module('Music',['HoldingBayService','toastr'])
                 });
             };
             self.approveArtist = function(albums){
+              //We can't have the confirmation on both methods if they're going to call eachother...
+              //I think this should prompt for each album, which is a little better than having no confirmation at all.
+              /*let confirmation = confirm("Are you sure you want to approve these" + albums.length + " albums?");
+              if(!confirmation){
+                return;
+              }*/
               for(albumKey in albums){
                 self.approveAlbum(albums[albumKey]);
               }
             };
             self.getArtists();
         });
-
-/*
-todo:
-  Promise All for artist/album approval
-  add publisher to album modal.
-*/

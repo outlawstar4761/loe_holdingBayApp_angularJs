@@ -13,7 +13,7 @@
     "angular-route": "~1.6.8",
     "angular-toastr": "",
     "bootstrap": "~3.4.1",
-    "http-server": "^0.12.3",
+    "http-server": "^14.1.1",
     "jquery": "^3.5.1"
   },
   "repository": {
